@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+	<meta charset = "utf-8" />
+	<title>Leaflet: Part 1</title>
+	<link rel="stylesheet" type = "text/css" href ="leaflet/style.css" />
+	<link rel="stylesheet" type = "text/css" href ="leaflet/dist/leaflet.css" />
+	<script src="leaflet/dist/leaflet.js"></script>
+	<script type = "text/javascript">
+		window.onload = function()
+		{
+			//everything for our map goes here
+			var mymap = L.map('map').setView([37.774929,-122.41916], 13);
+
+			L.tileLayer('https://api.tiles.mapbox.com/v4/koffee00.ponjfgen/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoia29mZmVlMDAiLCJhIjoiY2luY2ttcWVzMHc3eHU4bHdicGVpNXQwZCJ9.D3JOc9uFGow31Sl_rjTNHg', {
+			    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			    maxZoom: 18,
+			    id: 'koffee00.ponjfgen',
+			    accessToken: 'pk.eyJ1Ijoia29mZmVlMDAiLCJhIjoiY2luY2ttcWVzMHc3eHU4bHdicGVpNXQwZCJ9.D3JOc9uFGow31Sl_rjTNHg'
+			}).addTo(mymap);
+		}
+	</script>
+</head>
+
+<body>
+	<div id="map">
+	</div>
+</body>
+</html>
