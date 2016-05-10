@@ -7,7 +7,7 @@ var GeoJsonSchema = new Schema({
     geometry:{type:{type:String,default:"Polygon"},coordinates:[]},
     properties: {Index:Number,From:Number,Time:Number}
    // Schema.Types.Mixed
-});
+}, { versionKey: false });
 
 // Mongoose Model definition
 
