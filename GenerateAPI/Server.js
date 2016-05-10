@@ -6,7 +6,9 @@ var MongoHexagon = require("./models/hexagon");
 var router = express.Router();
 var https = require("https");
 var mongoose = require("mongoose");
-var GeoJson = [];
+var geojson = require("./models/geojson");
+var GeoJson=[];
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -35,7 +37,7 @@ router.get("/hexagon", function(req, res) {
             }
             else {
                 for (var a in data) {
-                    console.log(data[a].X, data[a].Y)
+                    console.log(data[a].X, data[a].Y);
                     allpoint.push([data[a].X, data[a].Y]);
                 }
                 res.send(allpoint);
@@ -44,12 +46,144 @@ router.get("/hexagon", function(req, res) {
 
 });
 
-router.get("/", function(req, res) {
-    res.json({
-        "error": false,
-        "message": "Hello World"
+
+router.get("/:id", function(req, res) {
+    mongoOp.find({
+        _id: req.params.id
+    }, function(err, original) {
+        if (err) {
+            res.send({
+                error: err
+            });
+        }
+        else {
+            mongoOp.find({}, function(err, data) {
+                if (err) {
+                    res.send({
+                        "error": true,
+                        "message": "Error fetching data"
+                    });
+                }
+                else {
+                    var front = '/maps/api/distancematrix/json?%20units=imperial%20&origins=';
+                    var middle = '&destinations=';
+                    var end = '&mode=transit%20&transit_mode=bus%20&arrival_time=1461852459&key=';
+                    var key = 'AIzaSyAKyCVAw6_Euv3hZxiL629RvetTRLINdNM';
+                    var origions = original[0].Y + "," + original[0].X;
+
+                    var i = 0;
+                    var myloop = function() {
+                        setTimeout(function() {
+                            //                                                for (var i = 0; i < 5; i++) {
+                            var apipath = '';
+                            if (i === data.length-1) {
+                                res.send({
+                                    success: true
+                                });
+                            }
+                            else {
+                                apipath = apipath + data[i].Y + "," + data[i].X;
+                                var api = front + origions + middle + apipath + end + key;
+
+                                var url = {
+                                    host: 'maps.googleapis.com',
+                                    path: api
+                                };
+
+                                var index = data[i]._id;
+
+                                var generateGeoJson = function(log) {
+                                    var allpoint = [];
+                                    MongoHexagon.find({
+                                        id: log.index
+                                    }, function(err, destination) {
+                                        if (err) {
+                                            res.send(err);
+                                        }
+                                        else {
+                                            for (var a = 0; a < destination.length + 1; a++) {
+                                                if (a < destination.length) {
+                                                    allpoint.push([destination[a].X, destination[a].Y]);
+                                                }
+                                                else if (a === destination.length) {
+                                                    var jsondoc = new geojson({
+                                                        type: 'Feature',
+                                                        geometry: {
+                                                            type: 'Polygon',
+                                                            coordinates: allpoint
+                                                        },
+                                                        properties: {
+                                                            Index: log.index,
+                                                            From: req.params.id,
+                                                            Time: log.time
+                                                        }
+                                                    });
+
+                                                    jsondoc.save(function(err) {
+                                                        if (err) {
+                                                            console.log(err);
+                                                        }
+                                                        else {
+                                                            console.log("done");
+                                                        }
+                                                    });
+                                                }
+
+                                            }
+
+
+                                        }
+                                    });
+
+                                }
+
+                                var get_time = function(index, callback) {
+                                    return https.get(url, function(response) {
+                                        var result = '';
+                                        response.on('error', function(err) {
+                                            console.log(err);
+                                        });
+
+                                        response.on('data', function(data) {
+                                            result += data;
+                                        });
+
+                                        response.on('end', function() {
+                                            var parsed = JSON.parse(result);
+                                            if (parsed.rows.length === 0) {
+                                                res.send(parsed);
+                                            }
+                                            else {
+                                                var log = {};
+                                                var timeArray = parsed.rows[0].elements[0].duration.text.split(" ");
+                                                var time = timeArray[0];
+                                                log.time = time;
+                                                log.index = index;
+                                                callback(log);
+                                            }
+                                        });
+                                    })
+                                }
+                                get_time(index, generateGeoJson);
+
+                            }
+                            i++;
+                            if (i < data.length) { //  if the counter < 10, call the loop function
+                                myloop(); //  ..  again which will trigger another 
+                            }
+
+                            //                   }
+
+                        }, 50);
+                    }
+                myloop();
+                }
+            });
+
+        }
     });
 });
+
 
 router.route("/data/:lat/:log")
     .get(function(req, res) {
@@ -64,106 +198,116 @@ router.route("/data/:lat/:log")
                 var front = '/maps/api/distancematrix/json?%20units=imperial%20&origins=';
                 var middle = '&destinations=';
                 var end = '&mode=transit%20&transit_mode=bus%20&arrival_time=1461852459&key=';
-                var key = 'AIzaSyBx656GURA0TJ-FGFE7nQb8ziMV1hWgFZk';
+                var key = 'AIzaSyCjaKNHLAHUjlnAziHgrRhqE3lYrvlgGMg';
                 var origions = req.params.lat + "," + req.params.log;
-                for (var i = 0; i < 5; i++) {
-                    var apipath = '';
-                    if (data[i].X === req.params.log && data[i].Y === req.params.lat) {
-                        continue;
-                    }
-                    if (i === 5) {
-                        res.json(GeoJson);
-                        GeoJson = [];
-                        break;
-                    }
-                    else {
-                        apipath = apipath + data[i].Y + "," + data[i].X;
-                        var api = front + origions + middle + apipath + end + key;
+                var i = 0;
+                var myloop = function() {
+                    //                    for (var i = 0; i < 200; i++) {
+                    setTimeout(function() {
+                        var apipath = '';
+                        if (i === 799) {
+                            res.json(GeoJson);
+                            GeoJson = [];
+                        }
+                        else {
+                            apipath = apipath + data[i].Y + "," + data[i].X;
+                            var api = front + origions + middle + apipath + end + key;
 
-                        var url = {
-                            host: 'maps.googleapis.com',
-                            path: api
-                        };
+                            var url = {
+                                host: 'maps.googleapis.com',
+                                path: api
+                            };
 
-                        var destipointLat = data[i].Y;
-                        var destipointLog = data[i].X;
-                        var index = data[i]._id;
+                            var destipointLat = data[i].Y;
+                            var destipointLog = data[i].X;
+                            var index = data[i]._id;
 
-                        var generateGeoJson = function(log) {
-                            var allpoint = [];
-                            MongoHexagon.find({
-                                    id: log.index
-                                })
-                                .exec(function(err, data) {
-                                    if (err) {
-                                        res.send(err);
-                                    }
-                                    else {
-                                        for (var a = 0; a < data.length + 1; a++) {
-                                            if (a < data.length) {
-                                                allpoint.push([data[a].X, data[a].Y]);
+                            var generateGeoJson = function(log) {
+                                var allpoint = [];
+                                MongoHexagon.find({
+                                        id: log.index
+                                    })
+                                    .exec(function(err, data) {
+                                        if (err) {
+                                            res.send(err);
+                                        }
+                                        else {
+                                            for (var a = 0; a < data.length + 1; a++) {
+                                                if (a < data.length) {
+                                                    allpoint.push([data[a].X, data[a].Y]);
+                                                }
+                                                else if (a === data.length) {
+                                                    GeoJson.push({
+                                                        type: 'Feature',
+                                                        geometry: {
+                                                            type: 'Polygon',
+                                                            coordinates: allpoint
+                                                        },
+                                                        properties: {
+                                                            Index: log.index,
+                                                            From: log.index,
+                                                            Time: log.time
+                                                        }
+                                                    });
+
+
+                                                }
+
                                             }
-                                            else if (a === data.length) {
-                                                GeoJson.push({
-                                                    type: 'Feature',
-                                                    geometry: {
-                                                        type: 'Polygon',
-                                                        coordinates: allpoint
-                                                    },
-                                                    properties: {
-                                                        Index: log.index,
-                                                        From: log.index,
-                                                        Time: log.time
-                                                    }
-                                                });
 
-                                            }
 
                                         }
+                                    });
 
+                            }
 
-                                    }
-                                });
+                            var get_time = function(lat, logi, index, callback) {
+                                return https.get(url, function(response) {
+                                    var result = '';
+                                    response.on('error', function(err) {
+                                        console.log(err);
+                                    });
+
+                                    response.on('data', function(data) {
+                                        result += data;
+                                    });
+
+                                    response.on('end', function(err) {
+                                        if (err) {
+                                            console.log(err);
+                                        }
+                                        else {
+                                            var parsed = JSON.parse(result);
+                                            //console.log(parsed);
+                                            var log = {};
+                                            var timeArray = parsed.rows[0].elements[0].duration.text.split(" ");
+                                            var time = timeArray[0];
+                                            log.time = time;
+                                            log.lat = lat;
+                                            log.logi = logi;
+                                            log.index = index;
+                                            callback(log);
+                                        }
+                                    });
+
+                                })
+                            }
+
+                            get_time(destipointLat, destipointLog, index, generateGeoJson);
 
                         }
 
-                        var get_time = function(lat, logi, index, callback) {
-                            return https.get(url, function(response) {
-                                var result = '';
-                                response.on('error', function(err) {
-                                    console.log(err);
-                                });
-
-                                response.on('data', function(data) {
-                                    result += data;
-                                });
-
-                                response.on('end', function() {
-                                    var parsed = JSON.parse(result);
-                                    if (parsed.rows.length ===0)
-                                    {
-                                    res.send(parsed);
-                                    }
-                                    else{
-                                    var log = {};
-                                    var time = parsed.rows[0].elements[0].duration.text;
-                                    log.time = time;
-                                    log.lat = lat;
-                                    log.logi = logi;
-                                    log.index = index;
-                                    callback(log);
-                                    }
-                                });
-                            })
+                        i++;
+                        if (i < 800) { //  if the counter < 10, call the loop function
+                            myloop(); //  ..  again which will trigger another 
                         }
 
-                        get_time(destipointLat, destipointLog, index, generateGeoJson);
-
-                        continue;
-
-                    }
+                        //                    }
+                    }, 50);
 
                 }
+                myloop();
+
             }
         });
     })
