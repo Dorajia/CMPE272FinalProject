@@ -84,7 +84,7 @@
         <div class="col-md-4">
           <h2>Map</h2>
           <p>We at Project SF Transit Time hope that you appreciate the dedication we put into this site. Click on the button below to get started.</p>
-          <p><a class="btn btn-default" href="login.php" role="button">View details &raquo;</a></p>
+          <p><a class="btn btn-default" href="map.html" role="button">View details &raquo;</a></p>
         </div>
       </div>
 

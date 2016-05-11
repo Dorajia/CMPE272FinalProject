@@ -47,9 +47,9 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="index.php">Home</a></li>
-            <li class ="active"><a href="about.php">About</a></li>
-            <li><a href="contact.php">Contact</a></li>
-            <li><a href="map.html">Map</a></li>			
+            <li><a href="about.php">About</a></li>
+            <li class ="active"><a href="contact.php">Contact</a></li>
+            <li><a href="map.html">Map</a></li>     
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -83,11 +83,11 @@
 
       <div class="row featurette">
         <div class="col-md-7">
-          <h2 class="featurette-heading">Tang Wei</h2>
-          <p class="lead">Place holder text</p>
+          <h2 class="featurette-heading">Tang Weiyu</h2>
+          <p class="lead">Tang Weiyu is working towards his master's degree in software engineering. </p>
         </div>
         <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" src="image/profile_pic.png" alt="ProfilePic" >
+          
         </div>
       </div>
 
@@ -96,10 +96,10 @@
       <div class="row featurette">
         <div class="col-md-7">
           <h2 class="featurette-heading">Alvin Ko </h2>
-          <p class="lead">Alvin Ko graduated with a B.S. in Computer Science at SJSU. When he's not at work or at school, you can find him paddling on an outrigger canoe or dragon boat!</p>
+          <p class="lead">Alvin Ko designed this website. When he is not at work or school, you can find him paddling around the bay!</p>
         </div>
         <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" src="image/alvin_profile.png" alt="Alvin Ko">
+        
         </div>
       </div>
 
@@ -108,10 +108,10 @@
       <div class="row featurette">
         <div class="col-md-7">
           <h2 class="featurette-heading">Miao Shi </h2>
-          <p class="lead">Place holder text</p>
+          <p class="lead">Miao Shi's scripting experience in javascript was a critical to the SF transit time map. </p>
         </div>
         <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" src="image/profile_pic.png" alt="ProfilePic">
+          
         </div>
       </div>
 
@@ -119,11 +119,11 @@
 
     <div class="row featurette">
         <div class="col-md-7">
-          <h2 class="featurette-heading">Yuanyuan Jia </h2>
-          <p class="lead">Yuanyuan Jia will graduate with a M.S. from Software Engineering at SJSU. She likes movies and tv series very much, sepecially Detective films!</p>
+          <h2 class="featurette-heading">Dora Jia </h2>
+          <p class="lead">Dora Jia played a critical role in collecting and storing the data from the Google API tool we used in this project.</p>
         </div>
         <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" src="image/profile_pic.png" alt="ProfilePic">
+          
         </div>
       </div>
 

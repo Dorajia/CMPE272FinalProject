@@ -84,7 +84,7 @@
       <div class="row featurette" style="background-color:white">
         <div class="col-md-7">
           <h2 class="featurette-heading">Introduction <span class="text-muted"></span></h2>
-          <p class="lead">Place holder text</p>
+          <p class="lead">Our goal is to demonstrate the travel times if a person were only to take Muni and walk rather than commute via private car in San Francisco.</p>
         </div>
       </div>
 
@@ -93,7 +93,7 @@
       <div class="row featurette" style="background-color:white">
         <div class="col-md-7">
           <h2 class="featurette-heading">Problem It Solves <span class="text-muted"></span></h2>
-          <p class="lead">Place holder text</p>
+          <p class="lead">This SF Transit Time impacts social interaction between commuters and public transit companies by showing commute times. We want to caution that population in the Bay Area is increasing every year. Traffic will not get better and investments in public transit are lacking. If we do not address this issue, we will face longer commute times. </p>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
       <div class="row featurette" style="background-color:white">
         <div class="col-md-7">
           <h2 class="featurette-heading">Our Solution <span class="text-muted"></span></h2>
-          <p class="lead">Place holder text</p>
+          <p class="lead">To demonstrate this, a website was built. A user could click anyone on a map of San Francisco and receive the Muni travel times to everywhere else in San Francisco. </p>
         </div>
       </div>
 
