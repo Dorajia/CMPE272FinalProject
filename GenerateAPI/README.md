@@ -1,28 +1,27 @@
 # Build RESTful API using Node and MongoDB
 
-## Installation : 
+## Instruction : 
+Server.js is used to get the informaiton from Google Maps Distance Matrix API, generate the GeoJson format data and store it in MongoDB.
 
-Download or clone the code.
- Run 
+testdata.js is for the map to get the GeoJson data from MongoDB.
+
+## Installation : 
+Install node at your server first.
+Download or clone the code and run the command below:
  
  node Server.js
 
 ## Testing REST api : 
 
 Open up REST simulator ( Postman recommended )
-<<<<<<< HEAD
 
 Hit following URL's : 
-Http://localhost:8080/data/37.756746/-122.537572
-X Y are original points
+Http://localhost:8080/0
+0 is the index of hexagon.
 
-The hexagonGeometry is stored in the collection with name hexagonGeometry
-the HexagonCenter is stored in the collection with name coordinates 
+if you are runing node Server.js, it will store GeoJson data from 0 to all other 841 hexagons.
 
-=======
-- 
-## Tutorial link : 
->>>>>>> 7599a9e1e2fed26fe2ef861cd8efa88f42e906fd
+
 
 
 
