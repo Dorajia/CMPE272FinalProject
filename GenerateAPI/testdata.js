@@ -1,3 +1,5 @@
+//host a server for map.html retrieve data base on index
+
 var express = require('express');
 var bodyParser = require("body-parser");
 var router = express.Router();
@@ -24,21 +26,30 @@ mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27
 //  set api for data
  app.get('/data', function(req, res) {
  
+	res.header("Access-Control-Allow-Origin", "*");
+	//res.header("Access-Control-Request-Headers", "*");
+	var index = req.query.index;// passing index as parameter
+	console.log(index);
      geojson.find({
-		"properties.From": 0 },'-_id properties geometry type'
+		"properties.From": index },'-_id properties geometry type'
 		, function(err, maps) {
       if (err) {
         res.send(err);
       } else {
-        //console.log("success: done"+maps[1]);
+        console.log("success: done"+maps[1]);
 		//console.log("success: done"+maps[2]);
 		res.json(maps);
+		//res.send("var geo = " +JSON.stringify(maps));
       }
     });
 	
 });
 
-app.listen(8484);
-console.log("Listening to PORT 8848");
+
+app.listen(8080);
+console.log("Listening to PORT 8080");
+
+
+
 
 

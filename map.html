@@ -6,16 +6,16 @@
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-	<script src="sampleGJSON.geojson" type="text/javascript"></script>
-	<script src="sampleGJSON1.geojson" type="text/javascript"></script>
 	<script src="script\mapLayerFunction.js" type="text/javascript"></script>
-</head>
-
+	<script src ="testdatabase_data2.geojson" type = "text/javascript"></script>
+	
+</head>	
 <body>
 	<div id="map" style="width:1600px; height:1000px"></div>
+</body>
 
 	<script>
-			//everything for our map goes here
+
 			var mymap = L.map('map').setView([37.7605545,-122.4441486], 13);
 
 			L.tileLayer('https://api.mapbox.com/styles/v1/eastice/cinzn9qih000raem15hucojj9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWFzdGljZSIsImEiOiJjaW56bjM4azExOWp2dWttM2gwMm8yZ3VyIn0.E2Oafx3tcfJra6h2AslveA', {
@@ -24,16 +24,17 @@
 			    id: 'eastice.0356di54',
 			    accessToken: 'pk.eyJ1IjoiZWFzdGljZSIsImEiOiJjaW56bjM4azExOWp2dWttM2gwMm8yZ3VyIn0.E2Oafx3tcfJra6h2AslveA'
 			}).addTo(mymap);
-			
-			var myLayer = L.geoJson(geo,
-			{
-			style:style,
-			onEachFeature: onEachFeature
-			}
-			).addTo(mymap);
-			
-			
-	</script>
+	
+	
+	
+		var myLayer = L.geoJson(geo,
+									{
+									style:style,
+									onEachFeature: onEachFeature		
+									}
+								).addTo(mymap);
 
-</body>
+		
+		//loadData(0);
+		</script>
 </html>
