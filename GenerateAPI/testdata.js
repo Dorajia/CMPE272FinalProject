@@ -12,6 +12,7 @@ var MongoHexagon = require("./models/hexagon");
 
 var fetchdata = require("./fetchdata");
 console.log("start?");
+
 mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27017/Hexagon', function(err) {
     if (err) {
         console.log('connection error', err);
@@ -21,32 +22,22 @@ mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27
     }
 });
 
-
-// returns the data from database
-var map_data = fetchdata.fetchgeojson(0);
- console.log("Done reading get data");
+//  set api for data
+ app.get('/data', function(req, res) {
  
-app.use('/',router.get('/', function(req, res, next) {
-	console.log("home?");
-  res.write('No such home page check /map');
-})
-);
-
-
-var fs = require('fs');
-router.get('/map',function (req,res){
-	console.log("map?");
-	 fs.readFile('map_template.html','utf8',function (err, data){
-		console.log("start update map?"+typeof JSON.stringify(map_data));
-		data.replace(/\{geo_data_from_DB\}/g, /* JSON.stringify(map_data) */"test");
-		console.log("Done update map?");
-		console.log(data);
-        res.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
-        res.write(data);
-        res.end();
+     geojson.find({
+		"properties.From": 0 }
+		, function(err, maps) {
+      if (err) {
+        onErr(err, callback);
+      } else {
+        //console.log("success: done"+maps[1]);
+		//console.log("success: done"+maps[2]);
+		res.json(maps);
+      }
     });
-	});
-
+	
+});
 
 app.listen(8848);
 console.log("Listening to PORT 8848");
