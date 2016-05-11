@@ -10,7 +10,6 @@ var geojson = require("./models/geojson");
 var mongoOp = require("./models/mongo");
 var MongoHexagon = require("./models/hexagon");
 
-var fetchdata = require("./fetchdata");
 console.log("start?");
 
 mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27017/Hexagon', function(err) {
@@ -26,10 +25,10 @@ mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27
  app.get('/data', function(req, res) {
  
      geojson.find({
-		"properties.From": 0 }
+		"properties.From": 0 },'-_id properties geometry type'
 		, function(err, maps) {
       if (err) {
-        onErr(err, callback);
+        res.send(err);
       } else {
         //console.log("success: done"+maps[1]);
 		//console.log("success: done"+maps[2]);
@@ -39,7 +38,7 @@ mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27
 	
 });
 
-app.listen(8848);
+app.listen(8484);
 console.log("Listening to PORT 8848");
 
 
