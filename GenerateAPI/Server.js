@@ -2,18 +2,16 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mongoOp = require("./models/mongo");
-var MongoHexagon = require("./models/hexagon");
+var allpoints = require("./models/allpoints");
 var router = express.Router();
 var https = require("https");
 var mongoose = require("mongoose");
 var geojson = require("./models/geojson");
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     "extended": false
 }));
-
 
 
 mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27017/Hexagon', function(err) {
@@ -25,24 +23,15 @@ mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27
     }
 });
 
-router.get("/hexagon", function(req, res) {
-    var allpoint = [];
-    MongoHexagon.find({
-            id: "3"
-        })
-        .exec(function(err, data) {
-            if (err) {
-                res.send(err);
-            }
-            else {
-                for (var a in data) {
-                    console.log(data[a].X, data[a].Y);
-                    allpoint.push([data[a].X, data[a].Y]);
-                }
-                res.send(allpoint);
-            }
-        });
-
+router.get("/hexagon/:id", function(req, res) {
+    allpoints.find({
+        'properties.Index': req.params.id
+    }, '-_id geometry.coordinates', function(err, destination) {
+        if (err) {
+            res.send(err);
+        }
+        res.send(destination[0].geometry.coordinates);
+    });
 });
 
 
@@ -75,7 +64,7 @@ router.get("/:id", function(req, res) {
                         setTimeout(function() {
                             //                                                for (var i = 0; i < 5; i++) {
                             var apipath = '';
-                            if (i === data.length-1) {
+                            if (i === data.length) {
                                 res.send({
                                     success: true
                                 });
@@ -92,49 +81,37 @@ router.get("/:id", function(req, res) {
                                 var index = data[i]._id;
 
                                 var generateGeoJson = function(log) {
-                                    var allpoint = [];
-                                    MongoHexagon.find({
-                                        id: log.index
-                                    }, function(err, destination) {
+                                    allpoints.find({
+                                        'properties.Index': log.index
+                                    }, "-_id geometry.coordinates", function(err, destination) {
                                         if (err) {
                                             res.send(err);
                                         }
                                         else {
-                                            for (var a = 0; a < destination.length + 1; a++) {
-                                                if (a < destination.length) {
-                                                    allpoint.push([destination[a].X, destination[a].Y]);
+                                            var jsondoc = new geojson({
+                                                type: 'Feature',
+                                                geometry: {
+                                                    type: 'Polygon',
+                                                    coordinates: destination[0].geometry.coordinates
+                                                },
+                                                properties: {
+                                                    Index: log.index,
+                                                    From: req.params.id,
+                                                    Time: log.time
                                                 }
-                                                else if (a === destination.length) {
-                                                    var jsondoc = new geojson({
-                                                        type: 'Feature',
-                                                        geometry: {
-                                                            type: 'Polygon',
-                                                            coordinates: allpoint
-                                                        },
-                                                        properties: {
-                                                            Index: log.index,
-                                                            From: req.params.id,
-                                                            Time: log.time
-                                                        }
-                                                    });
-
-                                                    jsondoc.save(function(err) {
-                                                        if (err) {
-                                                            console.log(err);
-                                                        }
-                                                        else {
-                                                            console.log("done");
-                                                        }
-                                                    });
+                                            });
+                                            jsondoc.save(function(err) {
+                                                if (err) {
+                                                    console.log(err);
                                                 }
-
-                                            }
-
-
+                                                else {
+                                                    console.log("done");
+                                                }
+                                            });
                                         }
                                     });
 
-                                }
+                                };
 
                                 var get_time = function(index, callback) {
                                     return https.get(url, function(response) {
@@ -167,7 +144,7 @@ router.get("/:id", function(req, res) {
 
                             }
                             i++;
-                            if (i < data.length) { //  if the counter < 10, call the loop function
+                            if (i < data.length+1) { //  if the counter < 10, call the loop function
                                 myloop(); //  ..  again which will trigger another 
                             }
 
@@ -175,7 +152,7 @@ router.get("/:id", function(req, res) {
 
                         }, 50);
                     }
-                myloop();
+                    myloop();
                 }
             });
 
