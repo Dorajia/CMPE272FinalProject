@@ -8,12 +8,10 @@ var https = require("https");
 var mongoose = require("mongoose");
 var geojson = require("./models/geojson");
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     "extended": false
 }));
-
 
 
 mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27017/Hexagon', function(err) {
@@ -23,6 +21,10 @@ mongoose.connect('mongodb://ec2-54-191-90-209.us-west-2.compute.amazonaws.com:27
     else {
         console.log('connection successful');
     }
+});
+
+router.get("/map",function(req,res){
+    res.render('map');    
 });
 
 router.get("/hexagon", function(req, res) {
@@ -75,7 +77,7 @@ router.get("/:id", function(req, res) {
                         setTimeout(function() {
                             //                                                for (var i = 0; i < 5; i++) {
                             var apipath = '';
-                            if (i === data.length-1) {
+                            if (i === data.length) {
                                 res.send({
                                     success: true
                                 });
@@ -95,7 +97,9 @@ router.get("/:id", function(req, res) {
                                     var allpoint = [];
                                     MongoHexagon.find({
                                         id: log.index
-                                    }, function(err, destination) {
+                                    })
+                                    .sort("_id")
+                                    .exec(function(err, destination) {
                                         if (err) {
                                             res.send(err);
                                         }
@@ -109,7 +113,7 @@ router.get("/:id", function(req, res) {
                                                         type: 'Feature',
                                                         geometry: {
                                                             type: 'Polygon',
-                                                            coordinates: allpoint
+                                                            coordinates: [allpoint]
                                                         },
                                                         properties: {
                                                             Index: log.index,
@@ -167,7 +171,7 @@ router.get("/:id", function(req, res) {
 
                             }
                             i++;
-                            if (i < data.length) { //  if the counter < 10, call the loop function
+                            if (i < data.length+1) { //  if the counter < 10, call the loop function
                                 myloop(); //  ..  again which will trigger another 
                             }
 

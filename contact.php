@@ -119,8 +119,8 @@
 
     <div class="row featurette">
         <div class="col-md-7">
-          <h2 class="featurette-heading">Dora Jia </h2>
-          <p class="lead">Place holder text</p>
+          <h2 class="featurette-heading">Yuanyuan Jia </h2>
+          <p class="lead">Yuanyuan Jia will graduate with a M.S. from Software Engineering at SJSU. She likes movies and tv series very much, sepecially Detective films!</p>
         </div>
         <div class="col-md-5">
           <img class="featurette-image img-responsive center-block" src="image/profile_pic.png" alt="ProfilePic">
