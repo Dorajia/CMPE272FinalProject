@@ -3,7 +3,8 @@ function style(feature){
 				return{
 					fillColor: getColor(feature.properties.Time),
 					color: "#ff7800",
-					fillOpacity: 0.8
+					weight: 0.5,
+					fillOpacity: 0.6
 				};
 			};
 
@@ -46,6 +47,7 @@ function loadLayer(e){
 	loadData(index);
 	//mymap.removeLayer(olderLayer);
 	}
+	highlightFeature(e);
 };
 
 
@@ -56,8 +58,7 @@ d > 15 ? "#abd9e9" :
 d > 8 ?   "#e0f3f8" :
 d > 5 ? "#fee090" :
 d > 3 ? "#fdae61" :
-d > 0 ? "#f46d43" :
-"#d73027";
+"#f46d43" ;
 };
 
 

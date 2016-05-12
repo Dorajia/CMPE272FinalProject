@@ -11,11 +11,11 @@
 	
 </head>	
 <body>
-	<div id="map" style="width:1600px; height:1000px"></div>
+	<div id="map" style="width:1500px; height:900px; margin-left:10px; margin-top:40px"></div>
 </body>
 
 	<script>
-
+			
 			var mymap = L.map('map').setView([37.7605545,-122.4441486], 13);
 
 			L.tileLayer('https://api.mapbox.com/styles/v1/eastice/cinzn9qih000raem15hucojj9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWFzdGljZSIsImEiOiJjaW56bjM4azExOWp2dWttM2gwMm8yZ3VyIn0.E2Oafx3tcfJra6h2AslveA', {
@@ -25,7 +25,13 @@
 			    accessToken: 'pk.eyJ1IjoiZWFzdGljZSIsImEiOiJjaW56bjM4azExOWp2dWttM2gwMm8yZ3VyIn0.E2Oafx3tcfJra6h2AslveA'
 			}).addTo(mymap);
 	
-	
+			mymap.setMaxBounds([
+			    [37.699585, -122.530212],
+				[37.827963, -122.360267]
+			]);
+			
+			mymap.maxzoom=13;
+			mymap.minzoom=19;
 	
 		var myLayer = L.geoJson(geo,
 									{
@@ -36,5 +42,38 @@
 
 		
 		//loadData(0);
+		
+	var legend = L.control({position: 'topleft'});
+
+	legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 5, 10, 15, 30, 60, 90],
+        labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i] + 1) + ';opacity: 0.6"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + ' minutes <br>' : '+'+ " minutes ") ;
+    }
+
+    return div;
+	};
+
+legend.addTo(mymap);
 		</script>
+		<style>
+		.legend {
+    line-height: 18px;
+    color: #555;
+	}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.6;
+}
+		</style>
 </html>
