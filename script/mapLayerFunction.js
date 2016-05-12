@@ -65,7 +65,7 @@ d > 0 ? "#99000d" :
 	function loadData(index){
 	$.ajax({
                 type: 'GET',
-                url: 'http://localhost:8080/data?index='+index,
+                url: 'http://ec2-52-11-87-42.us-west-2.compute.amazonaws.com/data?index='+index,
                 data: { format:'json'},
 				dataType: 'application/json',
 				
