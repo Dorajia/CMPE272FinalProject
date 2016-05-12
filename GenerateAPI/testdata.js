@@ -1,4 +1,5 @@
 //host a server for map.html retrieve data base on index
+//server hosted on ec2-52-11-87-42.us-west-2.compute.amazonaws.com
 
 var express = require('express');
 var bodyParser = require("body-parser");
