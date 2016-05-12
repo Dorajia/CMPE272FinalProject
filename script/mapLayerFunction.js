@@ -41,7 +41,7 @@ function loadLayer(e){
 	console.log(e.target.feature.properties.Index);
 	console.log(e.target.feature.properties.Time);
 	var index = e.target.feature.properties.Index;
-	if(index < 5 ){
+	if(index < 41 || index > 800 ){
 	//var olderLayer = myLayer;
 	loadData(index);
 	//mymap.removeLayer(olderLayer);
@@ -50,14 +50,14 @@ function loadLayer(e){
 
 
 function getColor(d) {
-return d > 45 ? "#fee5d9" :
-d > 30 ?  "#fcbba1" :
-d > 15 ? "#fc9272" :
-d > 8 ?   "#fb6a4a" :
-d > 5 ? "#de2d26" :
-d > 3 ? "#a50f15" :
-d > 0 ? "#99000d" :
-"#FFEDA0";
+return d > 45 ? "#4575b4" :
+d > 30 ?  "#74add1" :
+d > 15 ? "#abd9e9" :
+d > 8 ?   "#e0f3f8" :
+d > 5 ? "#fee090" :
+d > 3 ? "#fdae61" :
+d > 0 ? "#f46d43" :
+"#d73027";
 };
 
 
